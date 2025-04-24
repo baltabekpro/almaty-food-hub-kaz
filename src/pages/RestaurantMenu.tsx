@@ -11,15 +11,41 @@ import { ChevronLeft } from 'lucide-react';
 import { toast } from "@/hooks/use-toast";
 import { supabase } from '@/integrations/supabase/client';
 
+// Define interfaces for our data
+interface Restaurant {
+  id: string;
+  name: string;
+  cuisine: string;
+  rating: number;
+  delivery_time: string;
+  image: string;
+}
+
+interface MenuItem {
+  id: string;
+  name: string;
+  description: string | null;
+  price: number;
+  image: string | null;
+  category_id: string;
+  restaurant_id: string;
+}
+
+interface Category {
+  id: string;
+  name: string;
+  restaurant_id: string;
+}
+
 const RestaurantMenu = () => {
   const { restaurantId } = useParams<{ restaurantId: string }>();
   const { t } = useLanguage();
   const { address } = useAuth();
   const navigate = useNavigate();
   
-  const [restaurant, setRestaurant] = useState<any>(null);
-  const [menuItems, setMenuItems] = useState<any[]>([]);
-  const [categories, setCategories] = useState<string[]>([]);
+  const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   
@@ -69,22 +95,22 @@ const RestaurantMenu = () => {
         setMenuItems(menuData || []);
         
         // Extract unique categories from menu items
-        const uniqueCategories = [...new Set(menuData?.map((item: any) => item.category_id) || [])];
+        const uniqueCategoryIds = [...new Set(menuData?.map((item: MenuItem) => item.category_id) || [])];
         
         // If we have categories, fetch their names
-        if (uniqueCategories.length > 0) {
+        if (uniqueCategoryIds.length > 0) {
           const { data: categoryData, error: categoryError } = await supabase
             .from('menu_categories')
             .select('*')
-            .in('id', uniqueCategories);
+            .in('id', uniqueCategoryIds);
             
           if (categoryError) {
             throw categoryError;
           }
           
           if (categoryData && categoryData.length > 0) {
-            setCategories(categoryData.map((cat: any) => cat.name));
-            setActiveCategory(categoryData[0].name);
+            setCategories(categoryData);
+            setActiveCategory(categoryData[0].id);
           }
         }
       } catch (error) {
@@ -174,29 +200,26 @@ const RestaurantMenu = () => {
       
       <div className="page-container">
         {categories.length > 0 ? (
-          <Tabs defaultValue={categories[0]} value={activeCategory || undefined} onValueChange={setActiveCategory}>
+          <Tabs defaultValue={categories[0]?.id} value={activeCategory || undefined} onValueChange={setActiveCategory}>
             <h2 className="section-title">{t('menuTitle')}</h2>
             
             <TabsList className="mb-6 flex overflow-x-auto pb-2 space-x-2">
               {categories.map((category) => (
                 <TabsTrigger
-                  key={category}
-                  value={category}
+                  key={category.id}
+                  value={category.id}
                   className="px-4 py-2 whitespace-nowrap"
                 >
-                  {category}
+                  {category.name}
                 </TabsTrigger>
               ))}
             </TabsList>
             
             {categories.map((category) => (
-              <TabsContent key={category} value={category}>
+              <TabsContent key={category.id} value={category.id}>
                 <div className="space-y-4">
                   {menuItems
-                    .filter((item) => {
-                      const categoryObj = categories.find(c => c === category);
-                      return categoryObj && item.category_id === categoryObj.id;
-                    })
+                    .filter((item) => item.category_id === category.id)
                     .map((item) => (
                       <MenuItemCard
                         key={item.id}

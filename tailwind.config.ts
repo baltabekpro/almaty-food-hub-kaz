@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,7 +62,16 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+                // Food delivery app colors
+                food: {
+                    primary: '#FF5A5F',
+                    secondary: '#00A699',
+                    accent: '#FC642D',
+                    muted: '#767676',
+                    light: '#F7F7F7',
+                    dark: '#222222'
+                }
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

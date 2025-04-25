@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface User {
@@ -12,6 +11,10 @@ interface Address {
   street: string;
   house: string;
   apartment?: string;
+  coordinates?: {
+    longitude: number;
+    latitude: number;
+  };
 }
 
 interface AuthContextType {

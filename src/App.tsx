@@ -16,6 +16,7 @@ import Restaurants from "./pages/Restaurants";
 import RestaurantMenu from "./pages/RestaurantMenu";
 import Cart from "./pages/Cart";
 import Payment from "./pages/Payment";
+import PaymentProcessor from "./pages/PaymentProcessor";
 import OrderConfirmation from "./pages/OrderConfirmation";
 import NotFound from "./pages/NotFound";
 import Profile from "./pages/Profile";
@@ -40,6 +41,7 @@ const App = () => (
                 <Route path="/restaurant/:restaurantId" element={<RestaurantMenu />} />
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/payment" element={<Payment />} />
+                <Route path="/pay/:paymentId" element={<PaymentProcessor />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/confirmation/:orderId" element={<OrderConfirmation />} />
                 <Route path="*" element={<NotFound />} />

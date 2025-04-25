@@ -1,4 +1,3 @@
-
 interface TranslationDict {
   [key: string]: string;
 }
@@ -38,6 +37,19 @@ export const translations: Translations = {
     house: 'Үй',
     apartment: 'Пәтер нөмірі (қажет болса)',
     saveAddress: 'Мекенжайды сақтау',
+    pinLocation: 'Картадан орналасуыңызды көрсетіңіз',
+    dragPinHelper: 'Дәл орналасуды көрсету үшін белгіні жылжытуға болады',
+    startTypingStreet: 'Көшенің атын теріңіз...',
+    selectCityFirst: 'Алдымен қаланы таңдаңыз',
+    deliveryProgress: 'Жеткізу барысы',
+    loadingMap: 'Карта жүктелуде',
+    restaurant: 'Мейрамхана',
+    courier: 'Курьер',
+    yourAddress: 'Сіздің мекенжайыңыз',
+    showMap: 'Картаны көрсету',
+    hideMap: 'Картаны жасыру',
+    restaurantLocation: 'Мейрамхана',
+    yourLocation: 'Сіздің орналасуыңыз',
     
     // Restaurants
     restaurantsTitle: 'Мейрамханалар',
@@ -98,6 +110,19 @@ export const translations: Translations = {
     house: 'Дом',
     apartment: 'Квартира (если нужно)',
     saveAddress: 'Сохранить адрес',
+    pinLocation: 'Отметьте ваше местоположение на карте',
+    dragPinHelper: 'Маркер можно перетащить для точного указания местоположения',
+    startTypingStreet: 'Начните вводить название улицы...',
+    selectCityFirst: 'Сначала выберите город',
+    deliveryProgress: 'Прогресс доставки',
+    loadingMap: 'Загрузка карты',
+    restaurant: 'Ресторан',
+    courier: 'Курьер',
+    yourAddress: 'Ваш адрес',
+    showMap: 'Показать карту',
+    hideMap: 'Скрыть карту',
+    restaurantLocation: 'Ресторан',
+    yourLocation: 'Ваше местоположение',
     
     // Restaurants
     restaurantsTitle: 'Рестораны',

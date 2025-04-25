@@ -86,6 +86,36 @@ export type Database = {
           },
         ]
       }
+      payment_sessions: {
+        Row: {
+          id: string
+          order_id: string
+          amount: number
+          status: string
+          created_at: string
+          completed_at: string | null
+          payment_url: string
+        }
+        Insert: {
+          id: string
+          order_id: string
+          amount: number
+          status: string
+          created_at?: string
+          completed_at?: string | null
+          payment_url: string
+        }
+        Update: {
+          id?: string
+          order_id?: string
+          amount?: number
+          status?: string
+          created_at?: string
+          completed_at?: string | null
+          payment_url?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string | null
@@ -175,7 +205,7 @@ export type Tables<
         Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
-  ? (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+  ? (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] & 
       Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Row: infer R
     }

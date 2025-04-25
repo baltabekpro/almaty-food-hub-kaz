@@ -1,13 +1,14 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
 import Navbar from '../components/Navbar';
 import MenuItemCard from '../components/MenuItemCard';
+import MapComponent from '@/components/MapComponent';
+import { DEFAULT_CENTER } from '@/lib/mapbox';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, MapPin, Clock, Star } from 'lucide-react';
 import { toast } from "@/hooks/use-toast";
 import { supabase } from '@/integrations/supabase/client';
 
@@ -19,6 +20,8 @@ interface Restaurant {
   rating: number;
   delivery_time: string;
   image: string;
+  longitude?: number;
+  latitude?: number;
 }
 
 interface MenuItem {
@@ -48,6 +51,7 @@ const RestaurantMenu = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showMap, setShowMap] = useState(false);
   
   // Redirect to address page if no address is set
   useEffect(() => {
@@ -188,15 +192,72 @@ const RestaurantMenu = () => {
               <span>{restaurant.cuisine}</span>
               <span className="mx-2">•</span>
               <div className="flex items-center">
-                <span className="text-yellow-400">★</span>
-                <span className="ml-1">{restaurant.rating}</span>
+                <Star className="h-4 w-4 text-yellow-400 mr-1" />
+                <span>{restaurant.rating}</span>
               </div>
               <span className="mx-2">•</span>
-              <span>{restaurant.delivery_time}</span>
+              <div className="flex items-center">
+                <Clock className="h-4 w-4 mr-1" />
+                <span>{restaurant.delivery_time}</span>
+              </div>
+              <span className="mx-2">•</span>
+              <Button 
+                variant="link" 
+                onClick={() => setShowMap(!showMap)}
+                className="p-0 h-auto text-white underline hover:text-gray-200"
+              >
+                <MapPin className="h-4 w-4 mr-1" />
+                {showMap ? t('hideMap') : t('showMap')}
+              </Button>
             </div>
           </div>
         </div>
       </div>
+      
+      {showMap && (
+        <div className="p-4 bg-white border-b">
+          <div className="max-w-4xl mx-auto">
+            <div className="rounded-lg overflow-hidden shadow-md">
+              <MapComponent 
+                center={restaurant.longitude && restaurant.latitude 
+                  ? [restaurant.longitude, restaurant.latitude] as [number, number]
+                  : DEFAULT_CENTER}
+                markers={[
+                  // Restaurant marker
+                  ...(restaurant.longitude && restaurant.latitude 
+                    ? [{ 
+                        longitude: restaurant.longitude, 
+                        latitude: restaurant.latitude,
+                        color: '#FF5733' // Restaurant color
+                      }] 
+                    : []),
+                  // User address marker (if available)
+                  ...(address?.coordinates 
+                    ? [{ 
+                        longitude: address.coordinates.longitude, 
+                        latitude: address.coordinates.latitude,
+                        color: '#4A66E0' // User location color
+                      }] 
+                    : [])
+                ]}
+                height="300px"
+              />
+            </div>
+            <div className="mt-2 text-sm text-gray-500 flex justify-between">
+              <span className="flex items-center">
+                <span className="inline-block w-3 h-3 bg-[#FF5733] rounded-full mr-1"></span>
+                {t('restaurantLocation')}
+              </span>
+              {address?.coordinates && (
+                <span className="flex items-center">
+                  <span className="inline-block w-3 h-3 bg-[#4A66E0] rounded-full mr-1"></span>
+                  {t('yourLocation')}
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
       
       <div className="page-container">
         {categories.length > 0 ? (

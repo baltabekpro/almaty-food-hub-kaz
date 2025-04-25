@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface MenuItem {
@@ -16,6 +15,7 @@ export interface CartItem extends MenuItem {
 
 interface CartContextType {
   items: CartItem[];
+  cartItems: CartItem[]; // Добавляем алиас для compatibility
   addItem: (item: MenuItem, restaurantId: string) => void;
   removeItem: (itemId: string) => void;
   updateQuantity: (itemId: string, quantity: number) => void;
@@ -98,6 +98,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     <CartContext.Provider
       value={{
         items,
+        cartItems: items, // Добавляем алиас для items
         addItem,
         removeItem,
         updateQuantity,
